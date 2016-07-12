@@ -1,43 +1,105 @@
 package mx.uach.ocorona.login.utils;
 
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+import mx.uach.ocorona.login.LoginActivity;
+import mx.uach.ocorona.login.models.User;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
+ * Maneja la comunicación con el servicio web de play.
+ *
  * Created by ocorona on 11/07/16.
  */
 public class WebService {
 
-    private static final String DOMAIN = "http://jsonplaceholder.typicode.com";
+    /**
+     * Cadena con la URL del dominio.
+     */
+    private static final String SERVICE_DOMAIN = "TODO:Añadir el dominio";
 
-    public static final String URL_USUARIO = String.format("%s/users", DOMAIN);
+    /**
+     * Cadena con la URL del servicio de logueo.
+     */
+    public static final String URL_LOGIN = String.format("%s/login/users", SERVICE_DOMAIN);
 
-    public static Boolean userExists (String user) {
+    private static String requestURL = "";
+
+    /**
+     * Verifica que el usuario exista en la base de datos.
+     *
+     * @param userEmail {@code String} email
+     * @return True/False
+     */
+    public static Boolean userExists (String userEmail) {
         Boolean exists = Boolean.FALSE;
         return exists;
     }
 
-    public static Boolean correctPassword (String user, String pass) {
+    /**
+     * Verifica que la contraseña sea valida para el correo del usuario.
+     *
+     * @param userEmail {@code String} email
+     * @param peanut {@code String} contraseña
+     * @return True/False
+     */
+    public static Boolean correctPassword (String userEmail, String peanut) {
         Boolean exists = Boolean.FALSE;
         return exists;
     }
 
+    public static Boolean loginIntent(final String userEmail, final String peanut) {
+        Boolean success;
+        try {
+            User user = getUser(userEmail, peanut);
+            if(user != null && user.getEmail() != null){
+                success = Boolean.TRUE;
+            } else {
+                success = Boolean.FALSE;
+            }
+        } catch (Exception e) {
+            Log.w("Error", "Fallo al intentar leer el servicio");
+            success = Boolean.FALSE;
+        }
+
+        return success;
+    }
 
 
-    public static String read(String url){
+    /**
+     * Recibe
+     * @param userEmail
+     * @param peanut
+     * @return
+     */
+    public static String read(String userEmail, String peanut){
         String json="{}";
         try {
-            URL ruta = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) ruta.openConnection();
+            requestURL = String.format("%/"+userEmail+"/"+peanut, URL_LOGIN);
+            URL route = new URL(requestURL);
+            HttpURLConnection connection = (HttpURLConnection) route.openConnection();
+//            json = transformBuffer(connection.getInputStream()).toString();
             json = transformBuffer(connection.getInputStream());
         }catch (Exception e) {
-            Log.w("Error", "No se puede leer el servicio");
-            json = "null";
+            Log.w("Error", "Fallo al intentar leer el servicio");
+            return null;
         }
         return json;
     }
@@ -65,6 +127,48 @@ public class WebService {
             }
         }
         return linea;
+    }
+
+    public static byte[] hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
+
+        try {
+            SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
+            PBEKeySpec spec = new PBEKeySpec( password, salt, iterations, keyLength );
+            SecretKey key = skf.generateSecret( spec );
+            byte[] res = key.getEncoded( );
+            return res;
+
+        } catch( NoSuchAlgorithmException | InvalidKeySpecException e ) {
+            throw new RuntimeException( e );
+        }
+    }
+
+    public static User getUser(String email, String penut){
+        ConnectServer server = new ConnectServer();
+        server.execute(email, penut);
+        User user = new User();
+        try {
+            String json = server.get();
+            if(json.equals("null")){
+                return null;
+            } else{
+                Gson gson = new Gson();
+                Type listType = new TypeToken<User>(){}.getType();
+                user = gson.fromJson(json, listType);
+            }
+
+        } catch (Exception e){
+            Log.e("Error", "No se puede leer el JSON.");
+        }
+
+        return user;
+    }
+
+    private static class ConnectServer extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... parameters) {
+            return read(parameters[0], parameters[1]);
+        }
     }
 
 }

@@ -47,7 +47,7 @@
                 android:ems="10"
                 android:id="@+id/txtUser"
                 android:layout_gravity="center"
-                android:hint="@string/username" />
+                android:hint="@string/user_email" />
         </FrameLayout>
 
         <FrameLayout
@@ -91,7 +91,7 @@
             android:id="@+id/fraLaySubmit">
 
             <Button
-                android:layout_width="165dp"
+                android:layout_width="221dp"
                 android:layout_height="wrap_content"
                 android:text="@string/login"
                 android:id="@+id/buttLogin"

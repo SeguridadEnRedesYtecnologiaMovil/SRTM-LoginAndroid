@@ -5,54 +5,89 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * Clase usuario.
+ *
  * Created by ocorona on 11/07/16.
  */
 public class User {
 
-    private static final String DOMAIN = "http://jsonplaceholder.typicode.com";
+    /**
+     * Correo electronico del usuario.
+     */
+    public String email;
 
-    public static final String URL_USUARIO = String.format("%s/users", DOMAIN);
+    /**
+     * Clave para la contraseña del usuario.
+     */
+    public String peanut;
 
-    public static String read(String url){
-        String json="{}";
-        try {
-            URL ruta = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) ruta.openConnection();
-            json = transformBuffer(connection.getInputStream()).toString();
-        }catch (Exception e) {
-            Log.w("Error", "No se puede leer el servicio");
-            json = "null";
-        }
-        return json;
+    /**
+     * Constructor vacío.
+     */
+    public User(){}
+
+    /**
+     * Constructor de un nuevo usuario.
+     *
+     * @param email Correo electronico del usuario
+     * @param peanut Clave para la contraseña del usuario
+     */
+    public User(String email, String peanut) {
+        this.email = email;
+        this.peanut = peanut;
     }
 
-    public static String transformBuffer(InputStream inputStream){
-        String linea = "";
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new InputStreamReader((inputStream)));
-            int value = -1;
-            while ((value = reader.read()) != -1) {
-                char c = (char) value;
-                linea = String.format("%s%s", linea, c);
-            }
-        }catch (Exception e) {
-            Log.e("Error", "No se puede leer el JSON");
-        }finally {
-            try{
-                if (reader != null){
-                    reader.close();
-                }
-            }catch (Exception e){
-                Log.e("Error","No se puede cerrar el JSON");
-            }
-        }
-        return linea;
+    /**
+     * Regresa el correo electrónico.
+     *
+     * @return email
+     */
+    public String getEmail() {
+        return email;
     }
 
+    /**
+     * Asigna el correo electrónico.
+     *
+     * @param email {@code String}
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Regresa la contraseña.
+     *
+     * @return penaut
+     */
+    public String getPeanut() {
+        return peanut;
+    }
+
+    /**
+     * Asigna la contraseña.
+     *
+     * @param peanut {@code String}
+     */
+    public void setPeanut(String peanut) {
+        this.peanut = peanut;
+    }
+
+    /**
+     * Regresa una concatenación de los campos de usuario.
+     *
+     * @return {@code String}
+     */
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", peanut='" + peanut + '\'' +
+                '}';
+    }
 }
