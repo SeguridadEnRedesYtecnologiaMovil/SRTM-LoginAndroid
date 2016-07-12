@@ -30,7 +30,8 @@
                 android:layout_height="75dp"
                 android:id="@+id/imaVieUser"
                 android:layout_gravity="center"
-                android:background="@drawable/usericon" />
+                android:background="@drawable/usericon"
+                android:contentDescription="@string/user_icon" />
         </FrameLayout>
 
         <FrameLayout
@@ -44,9 +45,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
-                android:id="@+id/editText"
+                android:id="@+id/txtUser"
                 android:layout_gravity="center"
-                android:hint="Username" />
+                android:hint="@string/username" />
         </FrameLayout>
 
         <FrameLayout
@@ -61,7 +62,8 @@
                 android:layout_height="79dp"
                 android:id="@+id/imaViePassword"
                 android:layout_gravity="center"
-                android:background="@drawable/passwordicon" />
+                android:background="@drawable/passwordicon"
+                android:contentDescription="@string/password_icon" />
         </FrameLayout>
 
         <FrameLayout
@@ -78,7 +80,7 @@
                 android:ems="10"
                 android:id="@+id/txtPassword"
                 android:layout_gravity="center"
-                android:hint="Password" />
+                android:hint="@string/password" />
         </FrameLayout>
 
         <FrameLayout
@@ -91,9 +93,10 @@
             <Button
                 android:layout_width="165dp"
                 android:layout_height="wrap_content"
-                android:text="login"
+                android:text="@string/login"
                 android:id="@+id/buttLogin"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:onClick="submit" />
         </FrameLayout>
 
         <FrameLayout
@@ -106,7 +109,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/labelErrorMessage"
                 android:layout_gravity="center" />
         </FrameLayout>
