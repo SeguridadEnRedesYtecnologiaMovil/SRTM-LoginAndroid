@@ -2,7 +2,9 @@ package mx.uach.ocorona.login.utils;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -17,11 +19,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import mx.uach.ocorona.login.LoginActivity;
 import mx.uach.ocorona.login.models.User;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Maneja la comunicación con el servicio web de play.
@@ -33,12 +31,12 @@ public class WebService {
     /**
      * Cadena con la URL del dominio.
      */
-    private static final String SERVICE_DOMAIN = "TODO:Añadir el dominio";
+    private static final String SERVICE_DOMAIN = "http://proyectoSALT";
 
     /**
      * Cadena con la URL del servicio de logueo.
      */
-    public static final String URL_LOGIN = String.format("%s/login/users", SERVICE_DOMAIN);
+    public static final String URL_LOGIN = String.format("%s/login/users/", SERVICE_DOMAIN);
 
     private static String requestURL = "";
 
@@ -92,12 +90,19 @@ public class WebService {
     public static String read(String userEmail, String peanut){
         String json="{}";
         try {
-            requestURL = String.format("%/"+userEmail+"/"+peanut, URL_LOGIN);
+            requestURL = String.format("%s%s/%s", URL_LOGIN,userEmail,peanut);
+            System.out.println("---------------------------------------------------------------------------");
+            System.out.println("requestURL = " + requestURL);
+            System.out.println("---------------------------------------------------------------------------");
             URL route = new URL(requestURL);
             HttpURLConnection connection = (HttpURLConnection) route.openConnection();
+            System.out.println("connection = " + connection);
 //            json = transformBuffer(connection.getInputStream()).toString();
-            json = transformBuffer(connection.getInputStream());
+            json = transformBuffer(connection.getInputStream()).toString();
+            System.out.println("json = " + json);
+            System.out.println("Yei");
         }catch (Exception e) {
+            System.out.println("e = " + e);
             Log.w("Error", "Fallo al intentar leer el servicio");
             return null;
         }
