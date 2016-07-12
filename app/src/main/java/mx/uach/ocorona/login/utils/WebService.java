@@ -31,7 +31,7 @@ public class WebService {
     /**
      * Cadena con la URL del dominio.
      */
-    private static final String SERVICE_DOMAIN = "http://proyectoSALT";
+    private static final String SERVICE_DOMAIN = "TODO write your IP here";
 
     /**
      * Cadena con la URL del servicio de logueo.
